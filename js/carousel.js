@@ -22,6 +22,14 @@ function Carousel() {
 
 Carousel.prototype = {
 
+    _initListeners() {
+        this.pauseBtn.addEventListener("click", this.pausePlay.bind(this));
+        this.prevBtn.addEventListener("click", this.prev.bind(this));
+        this.nextBtn.addEventListener("click", this.next.bind(this));
+        this.indicatorsContainer.addEventListener("click", this.indicate.bind(this));
+        document.addEventListener("keydown", this.pressKey.bind(this));
+    },
+
     goToSlide(n) {
         this.slides[this.currentSlide].classList.toggle("active");
         this.indicators[this.currentSlide].classList.toggle("active");
@@ -59,15 +67,13 @@ Carousel.prototype = {
     play() {
         this.pauseBtn.innerHTML = "Pause";
         this.isPlaying = true;
-        this.timerID = setInterval(this.nextSlide, 1000);
+        this.timerID = setInterval(playafter = () => this.nextSlide(), 1000);
     },
-
 
     pausePlay() {
         if (this.isPlaying) this.pause();
         else this.play();
     },
-
 
     indicate(e) {
         const target = e.target;
@@ -83,29 +89,32 @@ Carousel.prototype = {
         if (e.code === this.CODE_SPACE) this.pausePlay();
     },
 
-    swipeStart(e) {
-        this.swipeStartX = e.changedTouches[0].clientX;
-    },
-
-    swipeEnd(e) {
-        this.swipeEndX = e.changedTouches[0].clientX;
-        this.swipeStartX - this.swipeEndX > 100 && this.prev();
-        this.swipeStartX - this.swipeEndX < -100 && this.next();
-    },
-
-    initListeners() {
-        this.pauseBtn.addEventListener("click", this.pausePlay.bind(this));
-        this.prevBtn.addEventListener("click", this.prev.bind(this));
-        this.nextBtn.addEventListener("click", this.next.bind(this));
-        this.indicatorsContainer.addEventListener("click", this.indicate.bind(this));
-        document.addEventListener("keydown", this.pressKey.bind(this));
-        this.container.addEventListener("touchstart", this.swipeStart.bind(this));
-        this.container.addEventListener("touchend", this.swipeEnd.bind(this));
-    },
 
     init() {
-        this.initListeners();
-        this.timerID = setInterval(handler = () => this.nextSlide(), 2000);
+        this._initListeners();
+        this.timerID = setInterval(handler = () => this.nextSlide(), 1000);
     }
-
 }
+
+function SwipeCarousel() {
+    Carousel.apply(this, arguments);
+}
+
+SwipeCarousel.prototype = Object.create(Carousel.prototype);
+SwipeCarousel.prototype.constructor = SwipeCarousel;
+
+SwipeCarousel.prototype.swipeStart = function(e) {
+    this.swipeStartX = e.changedTouches[0].clientX;
+};
+
+SwipeCarousel.prototype.swipeEnd = function(e) {
+    this.swipeEndX = e.changedTouches[0].clientX;
+    this.swipeStartX - this.swipeEndX > 100 && this.prev();
+    this.swipeStartX - this.swipeEndX < -100 && this.next();
+};
+
+SwipeCarousel.prototype._initListeners = function() {
+    Carousel.prototype._initListeners.apply(this);
+    this.container.addEventListener("touchstart", this.swipeStart.bind(this));
+    this.container.addEventListener("touchend", this.swipeEnd.bind(this));
+};
