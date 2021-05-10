@@ -99,5 +99,10 @@
 
 }());*/
 
-const carousel = new SwipeCarousel();
+let carousel = new SwipeCarousel({
+    containerID: '#carousel',
+    interval: 1500,
+    isPlaing: false
+
+});
 carousel.init();

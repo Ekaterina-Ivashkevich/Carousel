@@ -1,10 +1,16 @@
 class Carousel {
 
-    constructor(containerID = '#carousel', slideID = '.slide') {
-        this.container = document.querySelector(containerID);
-        this.slides = this.container.querySelectorAll(slideID);
+    constructor(params) {
+        let settings = this._initConfig(params);
+        this.container = document.querySelector(settings.containerID);
+        this.slides = this.container.querySelectorAll(settings.slideID);
+        this.isPlaying = settings.isPlaying;
+        this.interval = settings.interval;
+        console.log(params);
+    }
 
-        this.interval = 2000;
+    _initConfig(o) {
+        return {... { containerID: '#carousel', slideID: '.slide', interval: 5000, isPlaying: true }, ...o };
     }
 
     _initProps() {
@@ -19,14 +25,13 @@ class Carousel {
 
         this.slidesCount = this.slides.length;
         this.currentSlide = 0;
-        this.isPlaying = true;
         this.timerID = null;
     }
 
     _initControls() {
 
         let controls = document.createElement('div');
-        const PAUSE = `<div id="pause" class="control">${this.FA_PAUSE}</div>`;
+        const PAUSE = `<div id="pause" class="control">${this.isPlaying ? this.FA_PAUSE : this.FA_PLAY}</div>`;
         const PREV = `<div id="prev" class="control">${this.FA_PREV}</div>`;
         const NEXT = `<div id="next" class="control">${this.FA_NEXT}</div>`;
 
@@ -130,7 +135,7 @@ class Carousel {
         this._initIndicators();
         this._initControls();
         this._initListeners();
-        this.timerID = setInterval(() => this.nextSlide(), this.interval);
+        if (this.isPlaying) this.timerID = setInterval(() => this.nextSlide(), this.interval);
     }
 }
 
