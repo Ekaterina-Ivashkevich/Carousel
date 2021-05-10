@@ -69,20 +69,20 @@ just for appearance; change whatever you want
 
 /*home*/
 
-.contols,
+.controls,
 .indicators {
-    display: flex;
     gap: 10px;
+    display: flex;
 }
 
 .control,
 .indicator {
+    display: flex;
     height: 30px;
     border-radius: 15px;
     background-color: rgb(83, 104, 104);
     color: azure;
     padding: 0 10px;
-    display: flex;
     align-items: center;
     cursor: pointer;
     font-family: Arial, Helvetica, sans-serif;
