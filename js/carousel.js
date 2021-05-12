@@ -185,8 +185,8 @@ class SwipeCarousel extends Carousel {
     swipeEnd(e) {
 
         this.swipeEndX = e.changedTouches[0].clientX;
-        this.swipeStartX - this.swipeEndX > 100 && this.prev();
-        this.swipeStartX - this.swipeEndX < -100 && this.next();
+        this.swipeStartX - this.swipeEndX > 100 && this.next();
+        this.swipeStartX - this.swipeEndX < -100 && this.prev();
 
     }
 }
